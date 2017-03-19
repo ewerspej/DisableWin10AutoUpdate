@@ -57,3 +57,15 @@ obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
 .vs/DisableWin10AutoUpdate/v14/.suo
 *.exe
 *.pdb
+obj/x64/Debug/DisableWin10AutoUpdate.csproj.FileListAbsolute.txt
+obj/x64/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+obj/x64/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+obj/x64/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+bin/x64/Debug/InstallUtil.InstallLog
+bin/x64/Debug/DisableWin10AutoUpdate.InstallLog
+bin/Debug/DisableWin10AutoUpdate.InstallLog
+bin/x64/Debug/DisableWin10AutoUpdate.exe.config
+bin/Debug/InstallUtil.InstallLog
+bin/x64/Debug/DisableWin10AutoUpdate.InstallState
+bin/x64/Debug/DisableWin10AutoUpdate.vshost.exe.config
+obj/x64/Debug/DisableWin10AutoUpdate.ProjectInstaller.resources

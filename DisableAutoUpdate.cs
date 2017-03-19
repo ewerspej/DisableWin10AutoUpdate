@@ -24,17 +24,17 @@ namespace DisableWin10AutoUpdate
             _lower = 8;
             _upper = 20;
 
-            _Timer = new System.Timers.Timer();
-            //_Timer.Interval = 3600000; // 60 minutes
-            _Timer.Interval = 10000; // 10 seconds
-            _Timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
-
             InitializeComponent();
         }
 
         protected override void OnStart(string[] args)
         {
             _runOnce = true;
+
+            _Timer = new System.Timers.Timer();
+            //_Timer.Interval = 3600000; // 60 minutes
+            _Timer.Interval = 10000; // 10 seconds
+            _Timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
             _Timer.Start();
         }
 
@@ -59,7 +59,6 @@ namespace DisableWin10AutoUpdate
         {
             //TODO: implement actual logic
 
-            //return true;
             if(_runOnce)
             {
                 _runOnce = false;
@@ -79,8 +78,27 @@ namespace DisableWin10AutoUpdate
             //Value-Data: hexadecimal
 
             const string settingsKey = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings";
-            Registry.SetValue(settingsKey, "ActiveHoursStart", start, RegistryValueKind.DWord);
-            Registry.SetValue(settingsKey, "ActiveHoursEnd", end, RegistryValueKind.DWord);
+
+            try
+            {                
+                Registry.SetValue(settingsKey, "ActiveHoursStart", start, RegistryValueKind.DWord);
+                Registry.SetValue(settingsKey, "ActiveHoursEnd", end, RegistryValueKind.DWord);
+            }
+            catch(Exception)
+            {
+                //...
+            }
+            finally
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\\users\\ewers\\service_log.txt", true))
+                {
+                    int startValue = (int)Registry.GetValue(settingsKey, "ActiveHoursStart", 0);
+                    int startEnd = (int)Registry.GetValue(settingsKey, "ActiveHoursEnd", 0);
+
+                    file.WriteLine("ActiveHoursStart: " + startValue.ToString());
+                    file.WriteLine("ActiveHoursEnd: " + startEnd.ToString());
+                }
+            }            
         }
 
         public void ReadConfiguration()
