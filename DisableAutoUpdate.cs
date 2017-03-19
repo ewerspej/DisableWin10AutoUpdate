@@ -33,7 +33,8 @@ namespace DisableWin10AutoUpdate
         }
 
         protected override void OnStart(string[] args)
-        {            
+        {
+            _runOnce = true;
             _Timer.Start();
         }
 
