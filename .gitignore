@@ -55,3 +55,5 @@ bin/Debug/DisableWin10AutoUpdate.vshost.exe
 bin/Debug/DisableWin10AutoUpdate.exe.config
 obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
 .vs/DisableWin10AutoUpdate/v14/.suo
+*.exe
+*.pdb
