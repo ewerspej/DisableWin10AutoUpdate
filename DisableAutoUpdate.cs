@@ -34,8 +34,7 @@ namespace DisableWin10AutoUpdate
         protected override void OnStart(string[] args)
         {
             _Timer = new System.Timers.Timer();
-            //_Timer.Interval = 1800000; // check every 30 minutes
-            _Timer.Interval = 10000; // 10 seconds
+            _Timer.Interval = 1800000; // check every 30 minutes
             _Timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
             _Timer.Start();
         }

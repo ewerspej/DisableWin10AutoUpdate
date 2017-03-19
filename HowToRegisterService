@@ -1,5 +1,5 @@
 Register Service:
-C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe C:\Users\ewers\Documents\GitHub\DisableWin10AutoUpdate\DisableWin10AutoUpdate\bin\x64\Debug\DisableWin10AutoUpdate.exe
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe C:\Users\ewers\Documents\GitHub\DisableWin10AutoUpdate\DisableWin10AutoUpdate\bin\x64\Release\DisableWin10AutoUpdate.exe
 
 Unregister Service:
-C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /u C:\Users\ewers\Documents\GitHub\DisableWin10AutoUpdate\DisableWin10AutoUpdate\bin\x64\Debug\DisableWin10AutoUpdate.exe
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /u C:\Users\ewers\Documents\GitHub\DisableWin10AutoUpdate\DisableWin10AutoUpdate\bin\x64\Release\DisableWin10AutoUpdate.exe
