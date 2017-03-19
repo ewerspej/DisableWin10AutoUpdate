@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DisableWin10AutoUpdate
 {
-    public partial class Service1 : ServiceBase
+    public partial class DisableAutoUpdate : ServiceBase
     {
-        public Service1()
+        public DisableAutoUpdate()
         {
             InitializeComponent();
         }

@@ -17,7 +17,7 @@ namespace DisableWin10AutoUpdate
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
-                new Service1()
+                new DisableAutoUpdate()
             };
             ServiceBase.Run(ServicesToRun);
         }
