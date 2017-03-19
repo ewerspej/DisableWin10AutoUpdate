@@ -45,3 +45,13 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.cache
+obj/Debug/DisableWin10AutoUpdate.csproj.FileListAbsolute.txt
+obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+bin/Debug/DisableWin10AutoUpdate.vshost.exe.manifest
+bin/Debug/DisableWin10AutoUpdate.vshost.exe.config
+bin/Debug/DisableWin10AutoUpdate.vshost.exe
+bin/Debug/DisableWin10AutoUpdate.exe.config
+obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+.vs/DisableWin10AutoUpdate/v14/.suo
