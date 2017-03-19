@@ -42,6 +42,7 @@
             this.serviceInstaller1.Description = "Service to circumvent Windows Auto-Update";
             this.serviceInstaller1.DisplayName = "Disable Windows Auto-Update";
             this.serviceInstaller1.ServiceName = "DisableAutoUpdate";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
