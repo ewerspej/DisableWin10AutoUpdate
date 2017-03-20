@@ -39,8 +39,8 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "Service to circumvent Windows Auto-Update";
-            this.serviceInstaller1.DisplayName = "Disable Windows Auto-Update";
+            this.serviceInstaller1.Description = "Disables the annoying Auto-Update of Windows 10";
+            this.serviceInstaller1.DisplayName = "Disable Windows 10 Auto-Update";
             this.serviceInstaller1.ServiceName = "DisableAutoUpdate";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 

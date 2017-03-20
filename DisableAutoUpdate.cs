@@ -1,124 +1,112 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
-using System.IO;
+using System.Timers;
 
 namespace DisableWin10AutoUpdate
 {
     public partial class DisableAutoUpdate : ServiceBase
     {
-        private const int FIRST_HALF_START = 0;
-        private const int FIRST_HALF_END = 12;
+        #region Constants
+        private const int FIRST_HALF_START  = 0;
+        private const int FIRST_HALF_END    = 12;
         private const int SECOND_HALF_START = 12;
-        private const int SECOND_HALF_END = 0;
+        private const int SECOND_HALF_END   = 0;
+        private const string KEYVAL_ACTIVE_START = "ActiveHoursStart";
+        private const string KEYVAL_ACTIVE_END   = "ActiveHoursEnd";
+        private const string SETTINGS_KEY        = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings";
+        #endregion
 
-        private const string _settingsKey = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings";
-        private const string _filePath = @"C:\\service_log.txt";
-
-        private static System.Timers.Timer _Timer;
+        #region Member Variables
         private static int _setStart = FIRST_HALF_START;
         private static int _setEnd   = FIRST_HALF_END;
+        private static int _hours;
+        private static Timer _timer;
+        #endregion
 
+        #region Public Methods
         public DisableAutoUpdate()
         {
+            this.AutoLog = true;
             InitializeComponent();
         }
 
         protected override void OnStart(string[] args)
         {
-            _Timer = new System.Timers.Timer();
-            _Timer.Interval = 1800000; // check every 30 minutes
-            _Timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
-            _Timer.Start();
+            _timer = new Timer();
+            _timer.Interval = 1800000; // check every 30 minutes
+            _timer.Elapsed += new ElapsedEventHandler(this.OnTimer);
+            _timer.Start();
+
+            EventLog.WriteEntry("Disable AutoUpdate Service started.");
         }
 
         protected override void OnStop()
         {
-            _Timer.Stop();
+            _timer.Stop();
+
+            EventLog.WriteEntry("Disable AutoUpdate Service stopped.");
         }
 
-        public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
+        public void OnTimer(object sender, ElapsedEventArgs args)
         {
             //only if a change to the registry is required, we actually perform the change
-            if(IsRegChangeRequired())
+            if(IsChangeRequired())
             {
                 //change values in registry
                 ChangeWorkingTime();
             }
         }
+        #endregion
 
-        public bool IsRegChangeRequired()
+        #region Service Functionality
+        private bool IsChangeRequired()
         {
-            int hours = DateTime.Now.TimeOfDay.Hours;
-            _setStart = (int)Registry.GetValue(_settingsKey, "ActiveHoursStart", 0);
-            _setEnd   = (int)Registry.GetValue(_settingsKey, "ActiveHoursEnd",   0);
+            _hours = DateTime.Now.TimeOfDay.Hours;
 
-            int correctedEnd = _setEnd;
-            if(_setEnd == 0)
+            int currentStart = (int)Registry.GetValue(SETTINGS_KEY, KEYVAL_ACTIVE_START, 0);
+            int currentEnd   = (int)Registry.GetValue(SETTINGS_KEY, KEYVAL_ACTIVE_END,   0);
+
+            if(currentEnd == 0)
             {
-                correctedEnd = 24;
+                currentEnd = 24;
             }
 
-            if (!(_setStart <= hours && hours < correctedEnd))
+            if (currentStart <= _hours && _hours < currentEnd)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
 
-        public void ChangeWorkingTime()
+        private void ChangeWorkingTime()
         {
-            //RegKey: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings
-            //Value-Name: ActiveHoursStart, ActiveHoursEnd
-            //Value-Type: REG_DWORD
-            //Value-Data: hexadecimal
-
             if(_setStart == FIRST_HALF_START && _setEnd == FIRST_HALF_END)
             {
                 _setStart = SECOND_HALF_START;
-                _setEnd = SECOND_HALF_END;
+                _setEnd   = SECOND_HALF_END;
             }
             else
             {
                 _setStart = FIRST_HALF_START;
-                _setEnd = FIRST_HALF_END;
+                _setEnd   = FIRST_HALF_END;
             }
 
             try
-            {                
-                Registry.SetValue(_settingsKey, "ActiveHoursStart", _setStart, RegistryValueKind.DWord);
-                Registry.SetValue(_settingsKey, "ActiveHoursEnd", _setEnd, RegistryValueKind.DWord);
+            {
+                Registry.SetValue(SETTINGS_KEY, KEYVAL_ACTIVE_START, _setStart, RegistryValueKind.DWord);
+                Registry.SetValue(SETTINGS_KEY, KEYVAL_ACTIVE_END,   _setEnd,   RegistryValueKind.DWord);
+
+                EventLog.WriteEntry(string.Format("{0}: {1}: {2}", DateTime.Now.ToLongTimeString(), KEYVAL_ACTIVE_START, _setStart.ToString()));
+                EventLog.WriteEntry(string.Format("{0}: {1}: {2}", DateTime.Now.ToLongTimeString(), KEYVAL_ACTIVE_END, _setEnd.ToString()));
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Error setting registry key: {0}", ex.Message);
-            }
-            finally
-            {
-                try
-                {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(_filePath, true))
-                    {
-                        int startValue = (int)Registry.GetValue(_settingsKey, "ActiveHoursStart", 0);
-                        int startEnd = (int)Registry.GetValue(_settingsKey, "ActiveHoursEnd", 0);
-
-                        file.WriteLine("{0} ActiveHoursStart: {1}", DateTime.Now.ToString(), startValue.ToString());
-                        file.WriteLine("{0} ActiveHoursEnd: {1}", DateTime.Now.ToString(), startEnd.ToString());
-                    }
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine("Error writing to service log: {0}", ex.Message);
-                }
-            }            
+                EventLog.WriteEntry(string.Format("Error setting registry key: {0}", ex.Message));
+            }           
         }
+        #endregion
     }
 }
