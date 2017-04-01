@@ -35,11 +35,14 @@ namespace DisableWin10AutoUpdate
         protected override void OnStart(string[] args)
         {
             _timer = new Timer();
-            _timer.Interval = 1800000; // check every 30 minutes
+            _timer.Interval = 1200000; // check every 20 minutes
             _timer.Elapsed += new ElapsedEventHandler(this.OnTimer);
             _timer.Start();
 
             EventLog.WriteEntry("Disable AutoUpdate Service started.");
+
+            //as soon as service starts, check if change is required
+            ChangeIfRequired();
         }
 
         protected override void OnStop()
@@ -49,14 +52,19 @@ namespace DisableWin10AutoUpdate
             EventLog.WriteEntry("Disable AutoUpdate Service stopped.");
         }
 
-        public void OnTimer(object sender, ElapsedEventArgs args)
+        private void ChangeIfRequired()
         {
             //only if a change to the registry is required, we actually perform the change
-            if(IsChangeRequired())
+            if (IsChangeRequired())
             {
                 //change values in registry
                 ChangeWorkingTime();
             }
+        }
+
+        public void OnTimer(object sender, ElapsedEventArgs args)
+        {
+            ChangeIfRequired();
         }
         #endregion
 
